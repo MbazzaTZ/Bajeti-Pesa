@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ji-bajeti Pro - Smart Budget Tracker</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb"> <link rel="stylesheet" href="../styles/colorSystem.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLMDJz9t7T10X0LuzW3/oHIN5/DkXn+088JgXz84g1XwI/2R9kP+M4/y23V/o8uA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <style>
+        body { margin: 0; font-family: sans-serif; background-color: var(--color-background); color: var(--color-text-default); }
+        *, *::before, *::after { box-sizing: border-box; }
+    </style>
+</head>
+<body>
+    <div id="app-root">
+        <div id="loading-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: var(--color-background); z-index: 1000;">
+            <div style="text-align: center;">
+                <h1 style="color: var(--color-primary);">Ji-bajeti Pro</h1>
+                <p>Initializing smart financial tools...</p>
+                </div>
+        </div>
+        </div>
+
+    <script type="module" src="../src/main.js"></script>
+</body>
+</html>
