@@ -1,33 +1,53 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ji-bajeti Pro - Smart Budget Tracker</title>
-    
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#2563eb"> <link rel="stylesheet" href="../styles/colorSystem.css">
-    <link rel="stylesheet" href="../styles/main.css">
-    
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLMDJz9t7T10X0LuzW3/oHIN5/DkXn+088JgXz84g1XwI/2R9kP+M4/y23V/o8uA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
-    <style>
-        body { margin: 0; font-family: sans-serif; background-color: var(--color-background); color: var(--color-text-default); }
-        *, *::before, *::after { box-sizing: border-box; }
-    </style>
-</head>
-<body>
-    <div id="app-root">
-        <div id="loading-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: var(--color-background); z-index: 1000;">
-            <div style="text-align: center;">
-                <h1 style="color: var(--color-primary);">Ji-bajeti Pro</h1>
-                <p>Initializing smart financial tools...</p>
-                </div>
-        </div>
-        </div>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ji-bajeti Pro – Smart Budget Tracker</title>
 
-    <script type="module" src="../src/main.js"></script>
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#2563eb" />
+
+  <link rel="stylesheet" href="/styles/colorSystem.css" />
+  <link rel="stylesheet" href="/styles/main.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+  <style>
+    body{margin:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+      background-color:var(--color-background);color:var(--color-text-default);overflow:hidden}
+    *,*::before,*::after{box-sizing:border-box}
+    #loading-screen{position:fixed;inset:0;display:flex;flex-direction:column;
+      justify-content:center;align-items:center;
+      background:linear-gradient(135deg,var(--color-primary),var(--color-info-500));
+      color:#fff;z-index:9999;opacity:1;transition:opacity 1s ease-out,transform 1s ease-out}
+    #loading-screen.fade-out{opacity:0;transform:scale(1.05);pointer-events:none}
+    #welcome-icon{font-size:3rem;margin-bottom:1rem;animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+    #loading-screen h1{font-size:2.5rem;margin-bottom:.5rem;animation:fadeInUp 1.2s ease-out forwards}
+    #loading-screen p{font-size:1rem;opacity:.9;animation:fadeInUp 1.5s ease-out forwards;animation-delay:.3s}
+    @keyframes fadeInUp{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}
+    #app-root{opacity:0;transition:opacity 1s ease-in}
+    #app-root.visible{opacity:1}
+  </style>
+</head>
+
+<body>
+  <div id="loading-screen">
+    <i id="welcome-icon" class="fas fa-wallet"></i>
+    <h1>Welcome to Ji-bajeti Pro</h1>
+    <p>Smart Personal Finance Management</p>
+  </div>
+
+  <div id="app-root"></div>
+
+  <script>
+    window.addEventListener('load',()=>{const l=document.getElementById('loading-screen');
+      const a=document.getElementById('app-root');
+      setTimeout(()=>{l.classList.add('fade-out');
+        setTimeout(()=>{l.style.display='none';a.classList.add('visible')},1000)},2000)});
+  </script>
+
+  <script type="module" src="/src/main.js"></script>
 </body>
 </html>
