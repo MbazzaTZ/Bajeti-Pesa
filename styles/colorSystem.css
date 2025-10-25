@@ -1,0 +1,58 @@
+﻿/* ------------------------------------------- */
+/* Enhanced Color System - Ji-bajeti Pro       */
+/* Usage: var(--color-primary), var(--color-danger-bg) */
+/* ------------------------------------------- */
+
+:root {
+    /* --- Shared Accent Colors (Remain Consistent) --- */
+    --color-primary-600: #2563eb; /* Blue */
+    --color-success-500: #10b981; /* Green */
+    --color-warning-500: #f59e0b; /* Yellow */
+    --color-danger-500: #ef4444; /* Red */
+    --color-info-500: #06b6d4; /* Cyan */
+
+    --color-primary: var(--color-primary-600);
+    --color-success: var(--color-success-500);
+    --color-warning: var(--color-warning-500);
+    --color-danger: var(--color-danger-500);
+    --color-info: var(--color-info-500);
+
+    /* --- Light Theme (Default) --- */
+    --color-background: #ffffff;
+    --color-surface: #f9fafb; /* Light gray for cards/sections */
+    --color-text-default: #1f2937; /* Dark text */
+    --color-text-secondary: #6b7280; /* Gray for subtle text */
+    --color-border: #e5e7eb;
+    --color-shadow: rgba(0, 0, 0, 0.08);
+
+    --color-primary-text: #ffffff; 
+    --color-success-bg: #d1fae5; 
+    --color-warning-bg: #fffbe9; 
+    --color-danger-bg: #fee2e2; 
+    --color-info-bg: #cfdafc; 
+}
+
+/* --- Dark Theme Overrides --- */
+body.dark-theme, .high-contrast {
+    --color-background: #111827; /* Dark blue/gray background */
+    --color-surface: #1f2937; /* Slightly lighter dark for cards */
+    --color-text-default: #f3f4f6; /* Light text */
+    --color-text-secondary: #9ca3af; /* Light gray for subtle text */
+    --color-border: #374151;
+    --color-shadow: rgba(0, 0, 0, 0.35); /* Darker shadow for depth */
+
+    --color-primary-text: #ffffff; 
+    --color-success-bg: #14532d; /* Darker success background */
+    --color-warning-bg: #713f12; /* Darker warning background */
+    --color-danger-bg: #7f1d1d; /* Darker danger background */
+    --color-info-bg: #1e3a8a; /* Darker info background */
+}
+
+/* Optional: High Contrast Mode for Accessibility (using the dark theme base) */
+.high-contrast {
+    --color-background: #000000;
+    --color-surface: #1f1f1f;
+    --color-text-default: #ffffff;
+    --color-text-secondary: #cccccc;
+    --color-border: #ffffff; /* White border for emphasis */
+}
