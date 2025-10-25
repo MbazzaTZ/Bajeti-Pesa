@@ -5,23 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ji-bajeti Pro – Smart Budget Tracker</title>
 
-  <!-- ✅ PWA Manifest -->
-  <link rel="manifest" href="/manifest.json" />
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="./manifest.json" />
   <meta name="theme-color" content="#2563eb" />
 
-  <!-- ✅ Core Styles (Root paths for Vercel) -->
-  <link rel="stylesheet" href="/styles/colorSystem.css" />
-  <link rel="stylesheet" href="/styles/main.css" />
+  <!-- Core Styles -->
+  <link rel="stylesheet" href="./styles/colorSystem.css" />
+  <link rel="stylesheet" href="./styles/main.css" />
 
-  <!-- ✅ External Libraries -->
+  <!-- External Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-    referrerpolicy="no-referrer"
-  />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer" />
 
-  <!-- ✅ Inline Animation Styles -->
   <style>
     body {
       margin: 0;
@@ -30,92 +25,50 @@
       color: var(--color-text-default);
       overflow: hidden;
     }
+    *, *::before, *::after { box-sizing: border-box; }
 
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
-
-    /* --- Animated Welcome Screen --- */
     #loading-screen {
       position: fixed;
       inset: 0;
       display: flex;
-      align-items: center;
-      justify-content: center;
       flex-direction: column;
+      justify-content: center;
+      align-items: center;
       background: linear-gradient(135deg, var(--color-primary), var(--color-info-500));
       color: #fff;
       z-index: 9999;
       opacity: 1;
       transition: opacity 1s ease-out, transform 1s ease-out;
     }
+    #loading-screen.fade-out { opacity: 0; transform: scale(1.05); pointer-events: none; }
 
-    #loading-screen.fade-out {
-      opacity: 0;
-      transform: scale(1.05);
-      pointer-events: none;
-    }
+    #welcome-icon { font-size: 3rem; animation: pulse 2s infinite; margin-bottom: 1rem; }
+    @keyframes pulse { 0%,100%{transform:scale(1);}50%{transform:scale(1.1);} }
 
-    #welcome-icon {
-      font-size: 3rem;
-      color: #ffffff;
-      margin-bottom: 1rem;
-      animation: pulse 2s infinite;
-    }
+    #loading-screen h1 { font-size: 2.5rem; margin-bottom: .5rem; animation: fadeInUp 1.2s ease-out forwards; }
+    #loading-screen p { font-size: 1rem; opacity:.9; animation: fadeInUp 1.5s ease-out forwards; animation-delay:.3s; }
+    @keyframes fadeInUp { 0%{opacity:0;transform:translateY(20px);}100%{opacity:1;transform:translateY(0);} }
 
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 0.9; }
-      50% { transform: scale(1.1); opacity: 1; }
-    }
-
-    #loading-screen h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-      animation: fadeInUp 1.2s ease-out forwards;
-    }
-
-    #loading-screen p {
-      font-size: 1rem;
-      letter-spacing: 0.5px;
-      opacity: 0.9;
-      animation: fadeInUp 1.5s ease-out forwards;
-      animation-delay: 0.3s;
-    }
-
-    @keyframes fadeInUp {
-      0% { opacity: 0; transform: translateY(20px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-
-    /* --- Reveal App Root --- */
-    #app-root {
-      opacity: 0;
-      transition: opacity 1s ease-in;
-    }
-
-    #app-root.visible {
-      opacity: 1;
-    }
+    #app-root { opacity: 0; transition: opacity 1s ease-in; }
+    #app-root.visible { opacity: 1; }
   </style>
 </head>
 
 <body>
-  <!-- ✅ Animated Welcome / Loading Screen -->
+  <!-- Animated Welcome -->
   <div id="loading-screen">
     <i id="welcome-icon" class="fas fa-wallet"></i>
     <h1>Welcome to Ji-bajeti Pro</h1>
     <p>Smart Personal Finance Management</p>
   </div>
 
-  <!-- ✅ Main App Container -->
+  <!-- App Container -->
   <div id="app-root"></div>
 
-  <!-- ✅ Fade-out Script -->
   <script>
     window.addEventListener('load', () => {
       const loader = document.getElementById('loading-screen');
       const appRoot = document.getElementById('app-root');
-
       setTimeout(() => {
         loader.classList.add('fade-out');
         setTimeout(() => {
@@ -126,7 +79,7 @@
     });
   </script>
 
-  <!-- ✅ Main Application Bootstrap -->
-  <script type="module" src="/src/main.js"></script>
+  <!-- ✅ Correct Path for Vercel -->
+  <script type="module" src="./src/main.js"></script>
 </body>
 </html>
