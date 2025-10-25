@@ -1,71 +1,84 @@
-﻿// File: services\service-worker.js
-// Handles PWA Offline Capabilities and Caching Strategy.
+// File: services/service-worker.js
+// Handles PWA offline capabilities, caching strategy, and update lifecycle for Ji-bajeti Pro.
 
 const CACHE_NAME = 'jibajeti-pro-v1';
 const ASSETS_TO_CACHE = [
-    '/',
-    '/index.html',
-    '/styles/main.css',
-    '/styles/colorSystem.css',
-    '/src/main.js',
-    '/public/manifest.json',
-    '/public/icons/icon-72x72.png' // Essential icon
-    // Add other essential assets here (e.g., fonts, core images)
+  '/',
+  '/index.html',
+  '/styles/main.css',
+  '/styles/colorSystem.css',
+  '/src/main.js',
+  '/public/manifest.json',
+  '/public/icons/icon-72x72.png'
+  // Add any additional static assets or fonts here as needed
 ];
 
 // --- Install Event ---
-self.addEventListener('install', (event) => {
-    console.log('[Service Worker] Installing...');
-    event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(cache => {
-                console.log('[Service Worker] Caching core assets.');
-                return cache.addAll(ASSETS_TO_CACHE);
-            })
-            .catch(err => console.error('[Service Worker] Failed to cache assets:', err))
-    );
-    self.skipWaiting(); // Forces the waiting service worker to become the active service worker
+self.addEventListener('install', event => {
+  console.log('[Service Worker] Installing...');
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => {
+        console.log('[Service Worker] Caching core assets...');
+        return cache.addAll(ASSETS_TO_CACHE);
+      })
+      .catch(err => console.error('[Service Worker] Asset caching failed:', err))
+  );
+  self.skipWaiting(); // Activate immediately
 });
 
 // --- Activate Event ---
-self.addEventListener('activate', (event) => {
-    console.log('[Service Worker] Activating...');
-    // Clean up old caches
-    event.waitUntil(
-        caches.keys().then(cacheNames => {
-            return Promise.all(
-                cacheNames.filter(cacheName => {
-                    return cacheName !== CACHE_NAME;
-                }).map(cacheName => {
-                    console.log('[Service Worker] Deleting old cache:', cacheName);
-                    return caches.delete(cacheName);
-                })
-            );
+self.addEventListener('activate', event => {
+  console.log('[Service Worker] Activating...');
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheName !== CACHE_NAME) {
+            console.log('[Service Worker] Removing old cache:', cacheName);
+            return caches.delete(cacheName);
+          }
         })
-    );
-    // Ensure that the new service worker controls the page immediately
-    return self.clients.claim(); 
+      );
+    })
+  );
+  self.clients.claim(); // Take control of open clients
 });
 
-// --- Fetch Event (Cache-First Strategy for Offline Assets) ---
-self.addEventListener('fetch', (event) => {
-    // Only intercept requests for assets we want to cache/serve offline
-    const url = new URL(event.request.url);
-    const shouldHandle = ASSETS_TO_CACHE.some(asset => url.pathname.endsWith(asset));
-    
+// --- Fetch Event: Cache-First Strategy for Static Assets ---
+self.addEventListener('fetch', event => {
+  const requestURL = new URL(event.request.url);
+
+  // Only intercept GET requests for cached files
+  if (event.request.method === 'GET') {
+    const shouldHandle = ASSETS_TO_CACHE.some(asset => requestURL.pathname.endsWith(asset));
     if (shouldHandle) {
-        event.respondWith(
-            caches.match(event.request)
-                .then(response => {
-                    // Cache hit - return response from cache
-                    if (response) {
-                        return response;
-                    }
-                    // Not in cache - fetch from network
-                    return fetch(event.request);
-                })
-        );
+      event.respondWith(
+        caches.match(event.request)
+          .then(response => {
+            if (response) return response;
+            return fetch(event.request).then(networkResponse => {
+              // Optionally: dynamically cache new assets
+              return caches.open(CACHE_NAME).then(cache => {
+                cache.put(event.request, networkResponse.clone());
+                return networkResponse;
+              });
+            });
+          })
+          .catch(() => caches.match('/index.html')) // Offline fallback
+      );
     }
+  }
 });
 
-// Future implementation: Background Sync and Offline Data Entry (not included in this basic structure)
+// --- Optional: Future Background Sync & Offline Data Support ---
+self.addEventListener('sync', event => {
+  console.log('[Service Worker] Sync event triggered:', event.tag);
+  // Future logic for syncing offline data when back online
+});
+
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
