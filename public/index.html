@@ -29,34 +29,103 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: var(--color-background);
       color: var(--color-text-default);
+      overflow: hidden;
     }
+
     *, *::before, *::after {
       box-sizing: border-box;
     }
+
+    /* --- Animated Welcome Screen --- */
     #loading-screen {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: var(--color-background);
-      z-index: 1000;
+      flex-direction: column;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-info-500));
+      color: #fff;
+      z-index: 9999;
+      opacity: 1;
+      transition: opacity 1s ease-out, transform 1s ease-out;
+    }
+
+    #loading-screen.fade-out {
+      opacity: 0;
+      transform: scale(1.05);
+      pointer-events: none;
+    }
+
+    #loading-screen h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      animation: fadeInUp 1.2s ease-out forwards;
+    }
+
+    #loading-screen p {
+      font-size: 1rem;
+      letter-spacing: 0.5px;
+      opacity: 0.9;
+      animation: fadeInUp 1.5s ease-out forwards;
+      animation-delay: 0.3s;
+    }
+
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* --- Subtle Pulse Effect --- */
+    #welcome-icon {
+      font-size: 3rem;
+      color: #ffffff;
+      margin-bottom: 1rem;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.1); opacity: 1; }
+    }
+
+    #app-root {
+      opacity: 0;
+      transition: opacity 1s ease-in;
+    }
+
+    #app-root.visible {
+      opacity: 1;
     }
   </style>
 </head>
 
 <body>
-  <div id="app-root">
-    <div id="loading-screen">
-      <div style="text-align: center;">
-        <h1 style="color: var(--color-primary);">Ji-bajeti Pro</h1>
-        <p>Initializing smart financial tools...</p>
-      </div>
-    </div>
+  <!-- Animated Welcome / Loading Screen -->
+  <div id="loading-screen">
+    <i id="welcome-icon" class="fas fa-wallet"></i>
+    <h1>Welcome to Ji-bajeti Pro</h1>
+    <p>Smart Personal Finance Management</p>
   </div>
+
+  <!-- Main App Container -->
+  <div id="app-root"></div>
+
+  <!-- Fade-out Animation Script -->
+  <script>
+    window.addEventListener('load', () => {
+      const loader = document.getElementById('loading-screen');
+      const appRoot = document.getElementById('app-root');
+
+      setTimeout(() => {
+        loader.classList.add('fade-out');
+        setTimeout(() => {
+          loader.style.display = 'none';
+          appRoot.classList.add('visible');
+        }, 1000);
+      }, 2000); // Animation duration before loading main.js
+    });
+  </script>
 
   <!-- App Bootstrap -->
   <script type="module" src="../src/main.js"></script>
