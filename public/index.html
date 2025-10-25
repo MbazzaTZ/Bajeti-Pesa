@@ -5,24 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ji-bajeti Pro – Smart Budget Tracker</title>
 
-  <!-- PWA Manifest -->
-  <link rel="manifest" href="manifest.json" />
+  <!-- ✅ PWA Manifest -->
+  <link rel="manifest" href="/manifest.json" />
   <meta name="theme-color" content="#2563eb" />
 
-  <!-- Core Styles -->
-  <link rel="stylesheet" href="../styles/colorSystem.css" />
-  <link rel="stylesheet" href="../styles/main.css" />
+  <!-- ✅ Core Styles (Root paths for Vercel) -->
+  <link rel="stylesheet" href="/styles/colorSystem.css" />
+  <link rel="stylesheet" href="/styles/main.css" />
 
-  <!-- External Libraries -->
+  <!-- ✅ External Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLMDJz9t7T10X0LuzW3/oHIN5/DkXn+088JgXz84g1XwI/2R9kP+M4/y23V/o8uA=="
-    crossorigin="anonymous"
     referrerpolicy="no-referrer"
   />
 
+  <!-- ✅ Inline Animation Styles -->
   <style>
     body {
       margin: 0;
@@ -57,6 +56,18 @@
       pointer-events: none;
     }
 
+    #welcome-icon {
+      font-size: 3rem;
+      color: #ffffff;
+      margin-bottom: 1rem;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.1); opacity: 1; }
+    }
+
     #loading-screen h1 {
       font-size: 2.5rem;
       margin-bottom: 0.5rem;
@@ -76,19 +87,7 @@
       100% { opacity: 1; transform: translateY(0); }
     }
 
-    /* --- Subtle Pulse Effect --- */
-    #welcome-icon {
-      font-size: 3rem;
-      color: #ffffff;
-      margin-bottom: 1rem;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 0.9; }
-      50% { transform: scale(1.1); opacity: 1; }
-    }
-
+    /* --- Reveal App Root --- */
     #app-root {
       opacity: 0;
       transition: opacity 1s ease-in;
@@ -101,17 +100,17 @@
 </head>
 
 <body>
-  <!-- Animated Welcome / Loading Screen -->
+  <!-- ✅ Animated Welcome / Loading Screen -->
   <div id="loading-screen">
     <i id="welcome-icon" class="fas fa-wallet"></i>
     <h1>Welcome to Ji-bajeti Pro</h1>
     <p>Smart Personal Finance Management</p>
   </div>
 
-  <!-- Main App Container -->
+  <!-- ✅ Main App Container -->
   <div id="app-root"></div>
 
-  <!-- Fade-out Animation Script -->
+  <!-- ✅ Fade-out Script -->
   <script>
     window.addEventListener('load', () => {
       const loader = document.getElementById('loading-screen');
@@ -123,11 +122,11 @@
           loader.style.display = 'none';
           appRoot.classList.add('visible');
         }, 1000);
-      }, 2000); // Animation duration before loading main.js
+      }, 2000);
     });
   </script>
 
-  <!-- App Bootstrap -->
-  <script type="module" src="../src/main.js"></script>
+  <!-- ✅ Main Application Bootstrap -->
+  <script type="module" src="/src/main.js"></script>
 </body>
 </html>
