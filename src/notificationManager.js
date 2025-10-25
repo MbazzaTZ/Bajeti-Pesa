@@ -1,4 +1,4 @@
-﻿// File: src\notificationManager.js
+// File: src/notificationManager.js
 // Handles the application's notification system (in-app and browser).
 
 import { BUDGET_ALERT_THRESHOLDS } from './config.js';
@@ -7,54 +7,55 @@ export const NotificationManager = {
     
     /**
      * Sends a notification to the user (in-app banner and optionally browser).
-     * @param {string} title
-     * @param {string} body
-     * @param {string} type 'budget' | 'bill' | 'milestone' | 'tip'
+     * @param {string} title - Notification title
+     * @param {string} body - Notification message
+     * @param {string} type - 'budget' | 'bill' | 'milestone' | 'tip'
      */
     sendNotification(title, body, type = 'info') {
-        console.log(\[Notification] \: \ - \\);
+        console.log(`[Notification] ${type.toUpperCase()} | ${title}: ${body}`);
         
-        // 1. In-App Notification Logic (Placeholder for DOM manipulation)
-        // UIRenderer would handle displaying a temporary banner/modal.
+        // 1. In-App Notification Logic (placeholder for UI integration)
+        // Future: integrate with UIRenderer to display banners or toast messages.
 
         // 2. Browser Notification Logic
-        if ('Notification' in window && Notification.permission === 'granted') {
-            new Notification(title, {
-                body: body,
-                icon: 'public/icons/icon-72x72.png',
-                tag: type + Date.now()
-            });
-        } else if ('Notification' in window && Notification.permission !== 'denied') {
-            // Request permission if not already granted
-            Notification.requestPermission().then(permission => {
-                if (permission === 'granted') {
-                    this.sendNotification(title, body, type); // Resend after permission
-                }
-            });
+        if ('Notification' in window) {
+            if (Notification.permission === 'granted') {
+                new Notification(title, {
+                    body,
+                    icon: 'public/icons/icon-72x72.png',
+                    tag: `${type}-${Date.now()}`
+                });
+            } else if (Notification.permission !== 'denied') {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        this.sendNotification(title, body, type);
+                    }
+                });
+            }
         }
     },
 
     /**
      * Checks all budgets against spending and triggers alerts.
-     * @param {object} budgets { category: amount }
-     * @param {object} currentSpending { category: amount }
+     * @param {object} budgets - e.g., { Food: 100000, Housing: 300000 }
+     * @param {object} currentSpending - e.g., { Food: 85000, Housing: 310000 }
      */
-    checkBudgetAlerts(budgets, currentSpending) {
-        console.log('[Notification] Checking budget limits...');
-        
+    checkBudgetAlerts(budgets = {}, currentSpending = {}) {
+        console.log('[Notification] Checking budget alerts...');
+
         for (const category in budgets) {
             const budgetAmount = budgets[category];
             const spentAmount = currentSpending[category] || 0;
+            if (budgetAmount <= 0) continue;
+
             const percentageUsed = (spentAmount / budgetAmount) * 100;
-            
-            // Check against alert thresholds (80%, 90%, 100%)
+
+            // Check thresholds
             for (const threshold of BUDGET_ALERT_THRESHOLDS) {
-                if (percentageUsed >= threshold.percentage && percentageUsed < threshold.percentage + 10) { 
-                    this.sendNotification(
-                        \\ Budget Alert!\,
-                        \You have used \% of your \ budget.\,
-                        'budget'
-                    );
+                if (percentageUsed >= threshold.percentage && percentageUsed < threshold.percentage + 10) {
+                    const message = `You have used ${percentageUsed.toFixed(1)}% of your ${category} budget. (${threshold.message})`;
+                    this.sendNotification('Budget Alert!', message, 'budget');
+                    break;
                 }
             }
         }
@@ -62,22 +63,22 @@ export const NotificationManager = {
     
     /**
      * Checks for and sends reminders for upcoming bills.
-     * @param {Array<object>} recurringExpenses - The list of recurring expenses/bills.
+     * @param {Array<object>} recurringExpenses - List of recurring expenses.
+     * Expected structure: [{ name, nextDueDate, isRecurring }]
      */
-    checkBillReminders(recurringExpenses) {
+    checkBillReminders(recurringExpenses = []) {
         console.log('[Notification] Checking bill reminders...');
         const today = new Date();
-        // Placeholder logic: check if any bill is due in the next 7 days
-        // This requires date comparison logic (not implemented here)
-        
+        const sevenDaysAhead = new Date();
+        sevenDaysAhead.setDate(today.getDate() + 7);
+
         recurringExpenses.forEach(expense => {
-            // Simplified check for demonstration
-            if (expense.isDueSoon) { 
-                 this.sendNotification(
-                    'Bill Reminder',
-                    \The payment for '\' (\) is due soon.\,
-                    'bill'
-                );
+            if (!expense.nextDueDate) return;
+            const dueDate = new Date(expense.nextDueDate);
+
+            if (dueDate >= today && dueDate <= sevenDaysAhead) {
+                const message = `The payment for "${expense.name}" is due on ${expense.nextDueDate}.`;
+                this.sendNotification('Bill Reminder', message, 'bill');
             }
         });
     }
