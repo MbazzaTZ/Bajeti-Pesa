@@ -1,4 +1,4 @@
-﻿// File: src\uiRenderer.js
+// File: src/uiRenderer.js
 // Handles all DOM manipulation, view rendering, and interactive elements.
 
 import { GREETINGS } from './config.js';
@@ -8,9 +8,10 @@ const THEME_STORAGE_KEY = 'JBP_theme';
 export const UIRenderer = {
     
     // --- Theme Management ---
-    
+
     /**
      * Loads the saved theme preference or defaults to the system preference.
+     * @returns {'light'|'dark'}
      */
     loadThemePreference() {
         const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
@@ -20,11 +21,13 @@ export const UIRenderer = {
             document.body.classList.add('dark-theme');
             return 'dark';
         }
+        document.body.classList.remove('dark-theme');
         return 'light';
     },
 
     /**
      * Toggles the theme between light and dark.
+     * @param {boolean} isDark
      */
     toggleTheme(isDark) {
         if (isDark) {
@@ -34,16 +37,16 @@ export const UIRenderer = {
             document.body.classList.remove('dark-theme');
             localStorage.setItem(THEME_STORAGE_KEY, 'light');
         }
-        console.log(\[UI] Theme set to: \\);
+        console.log(`[UI] Theme set to: ${isDark ? 'dark' : 'light'}`);
     },
     
     // --- Dashboard Enhancements ---
-    
+
     /**
      * Renders the Personalized Welcome message.
      * @param {string} userName
      */
-    renderWelcome(userName) {
+    renderWelcome(userName = 'User') {
         const hour = new Date().getHours();
         let timeOfDay;
 
@@ -55,13 +58,12 @@ export const UIRenderer = {
             timeOfDay = 'Evening';
         }
 
-        const greeting = \Good \, \!\;
-        
+        const greeting = `Good ${timeOfDay}, ${userName}!`;
         const welcomeEl = document.getElementById('personalized-welcome');
         if (welcomeEl) {
             welcomeEl.textContent = greeting;
         }
-        console.log(\[UI] Rendered welcome message: \\);
+        console.log(`[UI] Rendered welcome message: ${greeting}`);
     },
     
     /**
@@ -75,8 +77,8 @@ export const UIRenderer = {
         if (scoreEl && statusEl) {
             scoreEl.textContent = score;
             statusEl.textContent = status;
-            scoreEl.className = \score-indicator score-\\;
-            console.log(\[UI] Rendered health score: \ (\)\);
+            scoreEl.className = `score-indicator score-${status.toLowerCase()}`;
+            console.log(`[UI] Rendered health score: ${score} (${status})`);
         }
     },
 
@@ -107,19 +109,19 @@ export const UIRenderer = {
     setupAccessibilityToggles() {
         // 1. Load initial theme preference
         const initialTheme = this.loadThemePreference();
-        
+
         // 2. Set up the Theme Toggle Switch
         const toggleContainer = document.getElementById('theme-toggle-container');
         if (toggleContainer) {
-            toggleContainer.innerHTML = \
-                <i class="fas fa-sun" style="color: \;"></i>
+            toggleContainer.innerHTML = `
+                <i class="fas fa-sun" style="color: var(--color-warning);"></i>
                 <label class="theme-toggle-slider">
-                    <input type="checkbox" id="theme-toggle-checkbox" \>
+                    <input type="checkbox" id="theme-toggle-checkbox" ${initialTheme === 'dark' ? 'checked' : ''}>
                     <span class="slider"></span>
                 </label>
-                <i class="fas fa-moon" style="color: \;"></i>
-            \;
-            
+                <i class="fas fa-moon" style="color: var(--color-primary);"></i>
+            `;
+
             const checkbox = document.getElementById('theme-toggle-checkbox');
             if (checkbox) {
                 checkbox.addEventListener('change', (e) => {
@@ -128,7 +130,7 @@ export const UIRenderer = {
             }
         }
 
-        // 3. Setup High Contrast Mode Toggle (Placeholder)
+        // 3. Setup High Contrast Mode Toggle (Optional Future Feature)
         const contrastButton = document.getElementById('high-contrast-toggle');
         if (contrastButton) {
             contrastButton.addEventListener('click', () => {
@@ -136,6 +138,7 @@ export const UIRenderer = {
                 console.log('[UI] Toggled High Contrast Mode.');
             });
         }
+
         console.log('[UI] Accessibility and Theme features initialized.');
     }
 };
